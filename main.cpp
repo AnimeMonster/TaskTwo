@@ -28,6 +28,9 @@ std::tuple<double, double, double, double, double> solutfornumber(std::vector<in
     k = x(2);
     t0 = x(3) / k;
 
+    if (r0 < 1 || rc < 1 || rc > 1e2 || r0 > 1e2) {
+        return std::make_tuple(1e99, r0, rc, k, t0);
+    }
 
     double averagefault = 0;
     for (int i = 0; i < Ti.size(); i++) {
@@ -52,10 +55,10 @@ int main() {
 
     double minfault = 999999;
     std::vector<int> numberforminfault;
-    for (int x = 0; x < 10000; x++) {
+    for (int x = 0; x < 100000; x++) {
         std::vector<int> number;
         for (int i = 0; i < Ti.size(); i++) {
-            if (rand() % 10 > 1) {
+            if (rand() % 10 > 3) {
                 number.push_back(i);
             }
         }
@@ -63,14 +66,15 @@ int main() {
             continue;
 
         auto[averagefault, r0, rc, k, t0] = solutfornumber(number, Ti, zi);
-        a = r0;
-        b = rc;
-        c = k;
-        d = t0;
+
 
         if (averagefault < minfault) {
             minfault = averagefault;
             numberforminfault = number;
+            a = r0;
+            b = rc;
+            c = k;
+            d = t0;
         }
     }
 
